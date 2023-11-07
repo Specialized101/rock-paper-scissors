@@ -1,19 +1,19 @@
 
-function getComputerChoice(){
+function getComputerChoice() {
     return choices[getRandomInt(3)];
 
 }
 
-function getRandomInt(max){
+function getRandomInt(max) {
     let randomInt = Math.floor(Math.random() * max);
     return randomInt;
 }
 
-function playRound(playerSelection, computerSelection){
+function playRound(playerSelection, computerSelection) {
 
     let userChoice = playerSelection.trim().toUpperCase();
 
-    switch (userChoice){
+    switch (userChoice) {
         case computerSelection:
             return `TIE! You both picked ${computerSelection} `;
 
@@ -37,36 +37,73 @@ function playRound(playerSelection, computerSelection){
     }
 }
 
-function game(){
-    let playerPoints = 0; 
+function displayResults(results, playerPoints, computerPoints) {
+
+    results.textContent = `Current Score: [Player] ${playerPoints} - ${computerPoints} [Computer]`;
+
+    if (playerPoints === MAX_SCORE)
+        results.textContent += '\nCongratulations! You won!';
+    else if (computerPoints === MAX_SCORE)
+        results.textContent += '\nToo baaaad! You lost.';
+}
+
+function game() {
+    let playerPoints = 0;
     let computerPoints = 0;
+    let roundResult;
+
+    const rockBtn = document.createElement('button');
+    const paperBtn = document.createElement('button');
+    const scissorsBtn = document.createElement('button');
+    const container = document.createElement('div');
+    const results = document.createElement('div');
+
+    container.setAttribute('id', 'main-container');
+    results.setAttribute('id', 'results');
+
+    rockBtn.textContent = choices[0];
+    paperBtn.textContent = choices[1];
+    scissorsBtn.textContent = choices[2];
     
+    displayResults(results, playerPoints, computerPoints);
 
-    for (let i = 1; i < 6; i++){
-        console.log(`[ROUND ${i}] Current Score: [Player] ${playerPoints} - ${computerPoints} [Computer]`);
+    document.body.appendChild(container);
+    container.appendChild(rockBtn);
+    container.appendChild(paperBtn);
+    container.appendChild(scissorsBtn);
+    container.appendChild(results);
 
-        let playerSelection = prompt("Choose between rock, paper or scissors: ");
-        let roundResult = playRound(playerSelection, getComputerChoice()); 
-        if (roundResult.charAt(0) === "L"){
-            console.log(roundResult);
-            computerPoints++;
-        }
-        else if (roundResult.charAt(0) === "W"){
-            console.log(roundResult);
+    rockBtn.addEventListener('click', () => {
+        roundResult = playRound(choices[0], getComputerChoice());
+        if (roundResult.charAt(0) === 'W')
             playerPoints++;
-        }
-        else
-            console.log(roundResult);
-    }
+        else if (roundResult.charAt(0) === 'L')
+            computerPoints++;
 
-    if (playerPoints > computerPoints)
-        console.log(`Congratulations! You won ${playerPoints}-${computerPoints}!`);
-    else if (playerPoints < computerPoints)
-        console.log(`Too baaaad! You lost ${playerPoints}-${computerPoints}!`);
-    else
-        console.log(`It's a tie! Final score is ${playerPoints}-${computerPoints} in the BO5`);
+        displayResults(results, playerPoints, computerPoints);
+    });
+    paperBtn.addEventListener('click', () => {
+        roundResult = playRound(choices[1], getComputerChoice());
+        if (roundResult.charAt(0) === 'W')
+            playerPoints++;
+        else if (roundResult.charAt(0) === 'L')
+            computerPoints++;
+
+        displayResults(results, playerPoints, computerPoints);
+    });
+    scissorsBtn.addEventListener('click', () => {
+        roundResult = playRound(choices[2], getComputerChoice());
+        if (roundResult.charAt(0) === 'W')
+            playerPoints++;
+        else if (roundResult.charAt(0) === 'L')
+            computerPoints++;
+
+        displayResults(results, playerPoints, computerPoints);
+    });
+
+
 }
 
 const choices = ["ROCK", "PAPER", "SCISSORS"];
-
+const MAX_SCORE = 5;
 game();
